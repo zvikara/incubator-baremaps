@@ -14,13 +14,18 @@
 
 package com.baremaps.tile.postgres;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import net.sf.jsqlparser.expression.ExpressionVisitorAdapter;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.FromItem;
 import net.sf.jsqlparser.statement.select.Join;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
 import net.sf.jsqlparser.statement.select.SelectItem;
+import net.sf.jsqlparser.statement.select.SelectItemVisitorAdapter;
 
 class PostgresCTE {
 
@@ -63,7 +68,7 @@ class PostgresCTE {
 
   @Override
   public int hashCode() {
-    String selectItemsString = selectItems.toString();
+    String selectItemsString = getSelectItems().toString();
     String fromItemString = fromItem.toString();
     String joinsString =
         Optional.ofNullable(joins).stream()

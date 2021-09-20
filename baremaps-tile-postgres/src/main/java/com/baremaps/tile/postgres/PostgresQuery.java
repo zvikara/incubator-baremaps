@@ -14,8 +14,12 @@
 
 package com.baremaps.tile.postgres;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.ExpressionVisitorAdapter;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectExpressionItem;
@@ -28,14 +32,12 @@ public class PostgresQuery {
   private final Integer minzoom;
   private final Integer maxzoom;
   private final String sql;
-  private final PlainSelect ast;
 
   public PostgresQuery(String layer, Integer minzoom, Integer maxzoom, String sql) {
     this.layer = layer;
     this.minzoom = minzoom;
     this.maxzoom = maxzoom;
     this.sql = sql;
-    this.ast = parse(sql);
   }
 
   public String getLayer() {
@@ -55,10 +57,33 @@ public class PostgresQuery {
   }
 
   public PlainSelect getAst() {
-    return ast;
+    return parse(sql);
   }
 
-  private PlainSelect parse(String query) {
+  public List<SelectItem> getSelectItemsSource() {
+    List<SelectItem> columns = new ArrayList<>();
+    getAst().getSelectItems().forEach(selectItem -> selectItem.accept(new SelectItemVisitorAdapter() {
+      @Override
+      public void visit(SelectExpressionItem item) {
+        item.getExpression().accept(new ExpressionVisitorAdapter() {
+          public void visit(Column column) {
+            Column c = new Column();
+            c.setTable(column.getTable());
+            c.setColumnName(column.getColumnName());
+            columns.add(new SelectExpressionItem(column));
+          }
+        });
+      }
+    }));
+    return columns;
+  }
+
+  public List<SelectItem> getSelectItemsTarget() {
+    return getAst().getSelectItems();
+  }
+
+
+  public static PlainSelect parse(String query) {
     // Try to parse the query
     PlainSelect plainSelect;
     try {
