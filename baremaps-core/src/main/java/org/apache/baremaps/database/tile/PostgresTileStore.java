@@ -101,7 +101,7 @@ public class PostgresTileStore implements TileStore {
         ByteArrayOutputStream data = new ByteArrayOutputStream()) {
 
       String sql = withQuery(tile);
-      logger.debug("Executing query: {}", sql);
+      logger.info("Executing query: {}", sql);
 
       int length = 0;
       try (GZIPOutputStream gzip = new GZIPOutputStream(data);
