@@ -82,6 +82,7 @@
     <version.lib.jaxb-runtime>2.3.5</version.lib.jaxb-runtime>
     <version.lib.jdbi>3.24.1</version.lib.jdbi>
     <version.lib.jersey>2.35</version.lib.jersey>
+    <version.lib.jgltf>2.0.3</version.lib.jgltf>
     <version.lib.jmh>1.35</version.lib.jmh>
     <version.lib.jsqlparser>4.2</version.lib.jsqlparser>
     <version.lib.jts>1.19.0</version.lib.jts>
@@ -191,6 +192,11 @@
         <groupId>de.bytefish</groupId>
         <artifactId>pgbulkinsert</artifactId>
         <version>${version.lib.pgbulkinsert}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.javagl</groupId>
+        <artifactId>jgltf-model-builder</artifactId>
+        <version>${version.lib.jgltf}</version>
       </dependency>
       <dependency>
         <groupId>info.picocli</groupId>
